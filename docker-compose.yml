@@ -1,0 +1,57 @@
+services:
+  webapigateway:
+    image: ${DOCKER_REGISTRY-}webapigateway
+    hostname: webapigateway
+    container_name: webapigateway
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: src/ApiGateways/Web/WebApiGateway/Dockerfile
+    ports: 
+      - 5000:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:     
+      - consul
+      - identityapi
+    networks:
+      - dps_backendservices
+  identityapi:
+    image: ${DOCKER_REGISTRY-}identityapi
+    hostname: identityapi
+    container_name: identityapi
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: src/Services/IdentityService/Identity.Api/Dockerfile
+    ports: 
+      - 5001:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ServiceConfig__ApiUrl=identityapi
+      - ServiceConfig__ConsulUrl=http://consul:8500
+      - ServiceConfig__HealthCheckEndPoint=healthz
+      - ServiceConfig__Id=identityapi-1453
+      - ServiceConfig__Name=IdentityService
+      - ServiceConfig__Port=8080
+    depends_on:     
+      - consul
+
+    networks:
+      - dps_backendservices
+  consul:
+    image: hashicorp/consul
+    hostname: consul
+    command: consul agent -dev -log-level=warn -ui -client=0.0.0.0
+    ports: 
+     - "8500:8500"
+     - "8600:8600/tcp"
+     - "8600:8600/udp"
+    networks:
+     - dps_backendservices 
+
+networks: 
+  dps_backendservices:
+   driver: bridge
+   external: false   
+

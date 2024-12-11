@@ -1,0 +1,36 @@
+{
+    "Routes": [
+        {
+            "Servicename": "IdentityService",
+            "DownstreamPathTemplate": "/{everything}",
+            "DownstreamScheme": "http",
+            "UpstreamPathTemplate": "/identity/{everything}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "UseServiceDiscovery": true,
+            "RouteIsCaseSensitive": false,
+            "LoadBalancerOptions": {
+                "Type": "RoundRobin"
+            },
+            "QoSOptions": {
+                "ExceptionsAllowedBeforeBreaking": 3,
+                "DurationOfBreak": 5000,
+                "TimeoutValue": 2000
+            }
+        }
+    ],
+    "GlobalConfiguration": {
+        "RequestIdKey": "OcelotRequestId",
+        "UseServiceDiscovery": true,
+        "ServiceDiscoveryProvider": {
+            "Host": "consul",
+            "Port": 8500,
+            "Type": "PollConsul",
+            /*
+        Type:
+          "Consul", means that Ocelot will get service information from consul per request
+          "PollConsul", means that Ocelot will poll Consul for latest service information
+      */
+            "PollingInterval": 100
+        }
+    }
+}

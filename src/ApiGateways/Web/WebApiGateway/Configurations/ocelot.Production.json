@@ -1,0 +1,29 @@
+//{
+//    "Routes": [
+//        {
+//            "UseServiceDiscovery": true,
+//            "ServiceName": "c_dpsidentityapi",
+//            "DownStreamPathTemplate": "/api/{url}",
+//            "DownstreamScheme": "http",
+
+
+//            "UpstreamPathTemplate": "/identity/{url}",
+//            "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+//            "UpstreamScheme": "http",
+//            "LoadBalancerOptions": {
+//                "Type": "LeastConnection"
+//            }
+//        }
+//    ],
+//    "GlobalConfiguration": {
+//        "BaseUrl": "http://c_webapigateway:8080",
+//        "ServiceDiscoveryProvider": {
+//            "Scheme": "http",
+//            //"Host": "localhost",
+//            "Host": "c_consul",
+//            "Port": 8500,
+//            "Type": "PollConsul",
+//            "PollingInterval": 1000
+//        }
+//    }
+//}
